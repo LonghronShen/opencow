@@ -732,12 +732,22 @@ GetDriveTypeW(
     return ::GetDriveTypeA(mbcsRootPathName);
 }
 
+typedef LPSTR (WINAPI *fpGetEnvironmentStringsA)();
+
 LPWSTR WINAPI
 GetEnvironmentStringsW(
     VOID
     )
 {
-    LPSTR pStringsA = ::GetEnvironmentStringsA();
+    static fpGetEnvironmentStringsA pGetEnvironmentStringsA =
+            (fpGetEnvironmentStringsA) ::GetProcAddress(
+                ::GetModuleHandleA("kernel32.dll"), "GetEnvironmentStringsA");
+    if (!pGetEnvironmentStringsA) {
+        SetLastError(ERROR_CALL_NOT_IMPLEMENTED);
+        return NULL;
+    }
+
+    LPSTR pStringsA = pGetEnvironmentStringsA();
     if (!pStringsA)
         return 0;
 

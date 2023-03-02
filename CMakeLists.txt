@@ -25,6 +25,8 @@ add_library(opencow SHARED ${src})
 
 if(MSVC)
     target_link_options(opencow PRIVATE "/nodefaultlib")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_link_options(opencow PRIVATE "-Xlinker /NODEFAULTLIB")
 endif()
 
 target_include_directories(opencow
