@@ -14,9 +14,9 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 endif()
 
 file(GLOB_RECURSE src
-    ${CMAKE_CURRENT_LIST_DIR}/*.c
-    ${CMAKE_CURRENT_LIST_DIR}/*.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/*.h
+    ${CMAKE_CURRENT_LIST_DIR}/src/*.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/*.h
 )
 
 add_library(opencow SHARED ${srcs})
