@@ -17,11 +17,26 @@ file(GLOB_RECURSE src
     ${CMAKE_CURRENT_LIST_DIR}/src/*.c
     ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/*.h
+    ${CMAKE_CURRENT_LIST_DIR}/src/*.def
+    ${CMAKE_CURRENT_LIST_DIR}/src/*.rc
 )
 
 add_library(opencow SHARED ${src})
 
-target_include_directories(opencow PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
+target_include_directories(opencow
+    PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src
+    PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include
+)
+
+target_compile_definitions(opencow
+    PRIVATE "_CRT_SECURE_NO_WARNINGS"
+    PRIVATE "_CRT_NONSTDC_NO_DEPRECATE"
+    PRIVATE "_TIMESPEC_DEFINED"
+    PRIVATE "_WIN32_WINNT=0x0400"
+    PRIVATE "_LIB"
+    PUBLIC "_UNICODE"
+    PUBLIC "UNICODE"
+)
 
 set_target_properties(opencow PROPERTIES PREFIX "")
 
