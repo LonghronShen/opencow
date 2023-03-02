@@ -19,7 +19,7 @@ file(GLOB_RECURSE src
     ${CMAKE_CURRENT_LIST_DIR}/src/*.h
 )
 
-add_library(opencow SHARED ${srcs})
+add_library(opencow SHARED ${src})
 
 target_include_directories(opencow PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src)
 
