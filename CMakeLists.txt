@@ -23,6 +23,10 @@ file(GLOB_RECURSE src
 
 add_library(opencow SHARED ${src})
 
+if(MSVC)
+    target_link_options(opencow PRIVATE "/nodefaultlib")
+endif()
+
 target_include_directories(opencow
     PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src
     PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include

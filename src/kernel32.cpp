@@ -403,7 +403,7 @@ FatalAppExitW(
 {
     CMbcsBuffer mbcsMessageText;
     mbcsMessageText.FromUnicode(lpMessageText);
-    ::FatalAppExit(uAction, mbcsMessageText);
+    ::FatalAppExitA(uAction, mbcsMessageText);
 }
 
 // FillConsoleOutputCharacterW
