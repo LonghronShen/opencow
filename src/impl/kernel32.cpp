@@ -741,7 +741,7 @@ GetEnvironmentStringsW(
 {
     static fpGetEnvironmentStringsA pGetEnvironmentStringsA =
             (fpGetEnvironmentStringsA) ::GetProcAddress(
-                ::GetModuleHandleA("kernel32.dll"), "GetEnvironmentStringsA");
+                ::GetModuleHandleA("kernel32.dll"), "GetEnvironmentStrings");
     if (!pGetEnvironmentStringsA) {
         SetLastError(ERROR_CALL_NOT_IMPLEMENTED);
         return NULL;

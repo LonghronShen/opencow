@@ -1,0 +1,12 @@
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    set(CMAKE_CXX_FLAGS "-Wall")
+    set(CMAKE_CXX_FLAGS_DEBUG "-g3")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -s")
+    set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "-shared -static-libgcc -static-libstdc++ -Wl,--enable-stdcall-fixup")
+endif()
+
+if(MSVC)
+    target_link_options(opencow PRIVATE "/nodefaultlib")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_link_options(opencow PRIVATE "-Xlinker /NODEFAULTLIB")
+endif()

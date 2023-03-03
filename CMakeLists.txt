@@ -1,51 +1,35 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 
-if(NOT WIN32)
-    message(FATAL_ERROR "Only available for Win32 platforms.")
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+project(opencow-proj C CXX)
+
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+    # Support Unix Makefiles and Ninja
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(opencow C CXX)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin CACHE STRING "CMAKE_LIBRARY_OUTPUT_DIRECTORY" FORCE)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin CACHE STRING "CMAKE_RUNTIME_OUTPUT_DIRECTORY" FORCE)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin CACHE STRING "CMAKE_ARCHIVE_OUTPUT_DIRECTORY" FORCE)
 
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    set(CMAKE_CXX_FLAGS "-Wall")
-    set(CMAKE_CXX_FLAGS_DEBUG "-g3")
-    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -s")
-    set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "-shared -static-libgcc -static-libstdc++ -Wl,--enable-stdcall-fixup")
-endif()
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin CACHE STRING "CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG" FORCE)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin CACHE STRING "CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG" FORCE)
 
-file(GLOB_RECURSE src
-    ${CMAKE_CURRENT_LIST_DIR}/src/*.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/src/*.h
-    ${CMAKE_CURRENT_LIST_DIR}/src/*.def
-    ${CMAKE_CURRENT_LIST_DIR}/src/*.rc
-)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_library(opencow SHARED ${src})
+set(CMAKE_MACOSX_RPATH 1 CACHE STRING "CMAKE_MACOSX_RPATH" FORCE)
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "Set to 11 or 14 to enable C++11 or C++17 builds, respectively." FORCE)
+set(CMAKE_C_STANDARD 17 CACHE STRING "Set to 99 or 11 to enable C99 or C11 builds, respectively." FORCE)
+set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(GLOBAL PROPERTY C_STANDARD_REQUIRED ON)
 
-if(MSVC)
-    target_link_options(opencow PRIVATE "/nodefaultlib")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_link_options(opencow PRIVATE "-Xlinker /NODEFAULTLIB")
-endif()
+include(FixCompileFlags)
 
-target_include_directories(opencow
-    PRIVATE ${CMAKE_CURRENT_LIST_DIR}/src
-    PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include
-)
+include(external/InitializeExternalComponents.cmake)
 
-target_compile_definitions(opencow
-    PRIVATE "_CRT_SECURE_NO_WARNINGS"
-    PRIVATE "_CRT_NONSTDC_NO_DEPRECATE"
-    PRIVATE "_TIMESPEC_DEFINED"
-    PRIVATE "_WIN32_WINNT=0x0400"
-    PRIVATE "_LIB"
-    PUBLIC "_UNICODE"
-    PUBLIC "UNICODE"
-)
-
-set_target_properties(opencow PROPERTIES PREFIX "")
-
-add_executable(simple "${CMAKE_CURRENT_LIST_DIR}/tests/simple/simple.cpp")
-
-target_link_libraries(simple PRIVATE opencow)
+add_subdirectory(src)
+add_subdirectory(tests)
