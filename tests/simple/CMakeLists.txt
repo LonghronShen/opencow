@@ -12,5 +12,9 @@ target_link_libraries(simple PRIVATE opencow)
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
     target_link_options(simple
         PRIVATE -municode
+        PRIVATE -nodefaultlibs
+        PRIVATE -nostdlib
+        PRIVATE -static-libgcc
+        PRIVATE -static-libstdc++
     )
 endif()
