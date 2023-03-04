@@ -29,6 +29,13 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_link_options(opencow
         PRIVATE -Xlinker /NODEFAULTLIB
     )
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    target_link_options(opencow
+        # PRIVATE -nodefaultlibs
+        # PRIVATE -nostdlib
+        PRIVATE -static-libgcc
+        PRIVATE -static-libstdc++
+    )
 endif()
 
 set_target_properties(opencow PROPERTIES PREFIX "")
