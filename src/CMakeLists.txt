@@ -23,4 +23,12 @@ target_compile_definitions(opencow
     PRIVATE "_LIB"
 )
 
+if(MSVC)
+    target_link_options(opencow PRIVATE /nodefaultlib)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_link_options(opencow
+        PRIVATE -Xlinker /NODEFAULTLIB
+    )
+endif()
+
 set_target_properties(opencow PROPERTIES PREFIX "")
