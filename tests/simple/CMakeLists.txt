@@ -1,6 +1,6 @@
 project(simple CXX)
 
-add_executable(simple WIN32 "${CMAKE_CURRENT_LIST_DIR}/simple.cpp")
+add_executable(simple "${CMAKE_CURRENT_LIST_DIR}/simple.cpp")
 
 target_compile_definitions(simple
     PRIVATE "_UNICODE"
