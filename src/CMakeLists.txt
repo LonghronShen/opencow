@@ -43,6 +43,7 @@ if(MSVC)
     target_link_options(opencow PRIVATE /nodefaultlib)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_link_options(opencow
+        PRIVATE -Xlinker /subsystem:console,4.0
         PRIVATE -Wl,-nodefaultlib:libcmt
         PRIVATE -Xlinker /FORCE
     )
