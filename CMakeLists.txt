@@ -27,6 +27,7 @@ set(CMAKE_C_STANDARD 17 CACHE STRING "Set to 99 or 11 to enable C99 or C11 build
 set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(GLOBAL PROPERTY C_STANDARD_REQUIRED ON)
 
+include(DetectClang)
 include(cmake/FixCompileFlags.cmake)
 
 include(external/InitializeExternalComponents.cmake)

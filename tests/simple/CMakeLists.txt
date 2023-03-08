@@ -9,7 +9,11 @@ target_compile_definitions(simple
 
 target_link_libraries(simple PRIVATE opencow)
 
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+if(MSVC)
+    target_link_options(simple
+        PRIVATE /subsystem:console,4.0
+    )
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
     target_link_options(simple
         PRIVATE -municode
         PRIVATE -nodefaultlibs

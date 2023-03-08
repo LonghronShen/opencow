@@ -1,5 +1,29 @@
 project(opencow C CXX)
 
+if(NOT WIN32)
+    message(FATAL_ERROR "Unsupported platform detected")
+endif()
+
+function(add_wincompat tgt)
+    if(MSVC)
+        # Do nothing
+    elseif(CMAKE_CXX_IS_CLANG_WIN)
+        target_compile_options(${tgt}
+            PRIVATE "-flto"
+            PRIVATE "-m32"
+            PRIVATE "-march=pentium-mmx"
+        )
+
+        target_link_libraries(${tgt}
+            PUBLIC EnlyzeWinCompatLib
+        )
+    else()
+        target_compile_options(${tgt}
+            PRIVATE "-march=pentium-mmx"
+        )
+    endif()
+endfunction()
+
 file(GLOB_RECURSE src
     ${CMAKE_CURRENT_LIST_DIR}/impl/*.c
     ${CMAKE_CURRENT_LIST_DIR}/impl/*.cpp
@@ -28,6 +52,8 @@ target_compile_definitions(opencow
 )
 
 if(MSVC)
+    add_wincompat(opencow)
+
     set_property(TARGET opencow PROPERTY
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
@@ -40,14 +66,25 @@ if(MSVC)
         PRIVATE /c
     )
 
-    target_link_options(opencow PRIVATE /nodefaultlib)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     target_link_options(opencow
-        PRIVATE -Xlinker /subsystem:console,4.0
-        PRIVATE -Wl,-nodefaultlib:libcmt
-        PRIVATE -Xlinker /FORCE
+        PRIVATE /FORCE
+        PRIVATE /subsystem:console,4.0
     )
+elseif(CMAKE_CXX_IS_CLANG_WIN)
+    target_link_options(opencow
+        PRIVATE -Xlinker "/subsystem:console,4.0"
+        # PRIVATE "-Xlinker /force"
+        # PRIVATE -Wl,-nodefaultlib
+    )
+
+    add_wincompat(opencow)
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    target_compile_options(opencow
+        PRIVATE -static-libgcc
+        PRIVATE -static-libstdc++
+        PRIVATE -Wl,--enable-stdcall-fixup
+    )
+
     target_link_options(opencow
         # PRIVATE -nodefaultlibs
         # PRIVATE -nostdlib
