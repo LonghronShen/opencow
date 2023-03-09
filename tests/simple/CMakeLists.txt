@@ -12,6 +12,7 @@ target_link_libraries(simple PRIVATE opencow)
 if(MSVC)
     target_link_options(simple
         PRIVATE /subsystem:console,4.0
+        PRIVATE /safeseh:no
     )
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
     target_link_options(simple
