@@ -39,7 +39,7 @@ target_compile_definitions(${project_name}
     PUBLIC "UNICODE"
 )
 
-if(CMAKE_CXX_IS_CLANG_CL_GNU)
+if(CMAKE_CXX_IS_CLANG_WIN)
     target_compile_options(${project_name}
         PRIVATE "-flto"
         PRIVATE "-march=pentium-mmx"

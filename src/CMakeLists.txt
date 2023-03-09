@@ -5,15 +5,17 @@ if(NOT WIN32)
 endif()
 
 function(add_wincompat tgt)
-    if(MSVC)
-        # Do nothing
-    elseif(CMAKE_CXX_IS_CLANG_WIN)
+    if(CMAKE_CXX_IS_CLANG_WIN)
         target_compile_options(${tgt}
             PRIVATE "-flto"
             PRIVATE "-m32"
             PRIVATE "-march=pentium-mmx"
         )
 
+        target_link_libraries(${tgt}
+            PUBLIC EnlyzeWinCompatLib
+        )
+    elseif(MSVC)
         target_link_libraries(${tgt}
             PUBLIC EnlyzeWinCompatLib
         )
@@ -58,15 +60,15 @@ if(MSVC)
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
     target_compile_options(opencow
-        PRIVATE /W3
         PRIVATE /Gm
         PRIVATE /GX
         PRIVATE /ZI
-        PRIVATE /Od
+        PRIVATE /GR-
         PRIVATE /c
     )
 
     target_link_options(opencow
+        PRIVATE /SAFESEH:NO
         PRIVATE /FORCE
         PRIVATE /subsystem:console,4.0
     )

@@ -5,7 +5,7 @@ include(CheckIncludeFileCXX)
 
 cmake_policy(SET CMP0097 NEW)
 
-if(CMAKE_CXX_IS_CLANG_CL_GNU)
+if(CMAKE_CXX_IS_CLANG_WIN)
     # winpthreads
     FetchContent_Declare(winpthreads
         GIT_REPOSITORY https://github.com/LonghronShen/winpthreads.git
